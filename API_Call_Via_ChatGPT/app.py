@@ -1,7 +1,3 @@
-###################
-# Run This app.py using the following command
-# uvicorn app:app --reload
-###################
 from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
