@@ -11,7 +11,6 @@ dataset file: self_instruct_data_small.jsonl
 
 
 Experiment 3 (GPT 3.5):
-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
 training job name: ftjob-eIBoVhcIHpvS0tIz9O2TNiFc
 dataset file: gpt_35_finetuning_data.jsonl
 model_name: ft:gpt-3.5-turbo-0613:hcltech::7tac0heF
