@@ -3,15 +3,23 @@
 # python chat.py
 #########################################
 
-import openai
+from openai import OpenAI
 import requests
+from dotenv import load_dotenv
+import os
 
 # API end points
 fdenquiry_url = 'http://127.0.0.1:8000/fdenquiry/'
 fdmaturity_url = 'http://127.0.0.1:8000/fdmaturity/'
 
-# Setup your own OpenAI API key
-openai.api_key = "API_KEY"
+# Setup OpenAI API 
+# Load the environment variables from .env file
+load_dotenv()
+
+client = OpenAI(
+    # Setup your own OpenAI API key
+    api_key= os.getenv("OPENAI_API_KEY")
+)
 
 class BankChat(object):
     '''
@@ -76,34 +84,33 @@ class BankChat(object):
         chat_ml = [
                     {"role": "user", "content": self.INTENT_DETECTION_SETUP_PROMPT.format(conversation=conversation)}
                   ]
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=chat_ml,
         temperature=0)
         
-        return response['choices'][0]['message']['content'].strip(" \n'")
+        return response.choices[0].message.content.strip(" \n'")
     
     def fd_enquiry_details(self, conversation):
         chat_ml = [
                     {"role": "user", "content": self.FD_ENQUIRY_DETAILS_PROMPT.format(conversation=conversation)}
                   ]
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=chat_ml,
         temperature=0)
         
-        return response['choices'][0]['message']['content'].strip(" \n")
+        return response.choices[0].message.content.strip(" \n")
     
     def fd_maturity_enquiry_details(self, conversation):
         chat_ml = [
                     {"role": "user", "content": self.FD_MATURITY_ENQUIRY_DETAILS_PROMPT.format(conversation=conversation)}
                   ]
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=chat_ml,
         temperature=0)
-        
-        return response['choices'][0]['message']['content'].strip(" \n")
+        return response.choices[0].message.content.strip(" \n")
     
     def conversation_chat(self):
         conversation = "" # Captures the conversation between agent and the customer
@@ -116,12 +123,12 @@ class BankChat(object):
         ]
 
         while True:
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=chatml_messages
             )
 
-            agent_response = response['choices'][0]['message']['content'].strip(" \n")
+            agent_response = response.choices[0].message.content.strip(" \n")
 
             if "END_OF_CONVERSATION" in agent_response:
                 print("Agent: Thank you for connecting with us. Have a nice day!")
